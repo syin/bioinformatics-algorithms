@@ -44,18 +44,10 @@ def align(seq1, seq2, d):
     final_score = S[len(seq2)][len(seq1)]
 
     # Traceback
-    for row in S: print row
-
-
-    for row in pointers: print row
-    align1 = ""
-    align2 = ""
-
-    i = len(seq2)
-    j = len(seq1)
+    align1 = "", align2 = ""
+    i = len(seq2), j = len(seq1)
 
     while True:
-
         if i==0 or j==0:
             break
 
