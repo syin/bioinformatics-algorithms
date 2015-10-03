@@ -6,9 +6,9 @@ Needleman-Wunsch implementation in Python
 from sys import argv
 from Bio import SeqIO
 from Bio.SubsMat import MatrixInfo
+import argparse
 
-
-def align(seq1, seq2, d):
+def align(seq1, seq2, d, outfile):
     # d is gap penalty
 
     # Initialize dynamic programming matrix
@@ -75,9 +75,8 @@ def align(seq1, seq2, d):
 
             j = j-1
 
-    print align1
-    print align2
 
+    write_output(outfile, align1, align2)
 
 
 def score(pair):
@@ -96,22 +95,40 @@ def read_sequences(filename):
     """
 
     fa = list(SeqIO.parse(filename, "fasta"))
-    seq1 = str(fa[0].seq)
-    seq2 = str(fa[1].seq)
+    if len(fa) == 2:
+        seq1 = str(fa[0].seq)
+        seq2 = str(fa[1].seq)
+    else:
+        print "Incorrect number of sequences in input file (should be 2)"
+        exit()
 
-    print seq1
-    print seq2
     return seq1, seq2
 
 
+def write_output(outfile, s1, s2):
+    f = open(outfile, "w")
+    f.write(s1+"\n"+s2)
+    f.close()
+
 def main():
 
-    filename = argv[1]
-    print filename
-    d = float(argv[2])
-    seq1, seq2 = read_sequences(filename)
-    align(seq1, seq2, d)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--input", nargs="+", help="Input FASTA file containing two sequences", required=True)
+    parser.add_argument("-o", "--output", nargs="+", help="Output file", required=True)
+    parser.add_argument("-d", "--gap-open", nargs="+", help="Gap open penalty", required=True, type=int)
+    parser.add_argument("-e", "--gap-extend", nargs="+", help="Gap extend penalty. If not specified, assumed linear gap penalty.", type=int)
 
+    args = parser.parse_args()
+
+    try:
+        filename = args.input[0]
+        seq1, seq2 = read_sequences(filename)
+        d = int(args.gap_open[0])
+        outfile = args.output[0]
+        align(seq1, seq2, d, outfile)
+        
+    except:
+        pass
 
 
 if __name__ == "__main__":
