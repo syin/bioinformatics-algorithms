@@ -44,8 +44,10 @@ def align(seq1, seq2, d):
     final_score = S[len(seq2)][len(seq1)]
 
     # Traceback
-    align1 = "", align2 = ""
-    i = len(seq2), j = len(seq1)
+    align1 = ""
+    align2 = ""
+    i = len(seq2)
+    j = len(seq1)
 
     while True:
         if i==0 or j==0:
@@ -97,12 +99,15 @@ def read_sequences(filename):
     seq1 = str(fa[0].seq)
     seq2 = str(fa[1].seq)
 
+    print seq1
+    print seq2
     return seq1, seq2
 
 
 def main():
 
     filename = argv[1]
+    print filename
     d = float(argv[2])
     seq1, seq2 = read_sequences(filename)
     align(seq1, seq2, d)
